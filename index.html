@@ -145,7 +145,7 @@
         )
         .forEach((task, index) => {
           const li = document.createElement('li');
-          li.className = \`task-item \${task.status === '已完成' ? 'done' : task.status === '處理中' ? 'processing' : ''} priority-\${task.priority}\`;
+          li.className = `task-item ${task.status === '已完成' ? 'done' : task.status === '處理中' ? 'processing' : ''} priority-${task.priority}`;
 
           // Checkbox + editable title
           const titleLabel = document.createElement('label');
