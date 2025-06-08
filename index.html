@@ -1,156 +1,330 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>工作備忘錄</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工作紀錄系統 v2</title>
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: "Microsoft JhengHei", sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-      padding: 40px;
-      max-width: 900px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #1a4f84;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #e3f2fd;
-    }
-    .section-title {
-      font-size: 20px;
-      margin-top: 40px;
-      color: #1a4f84;
-      border-left: 5px solid #1a4f84;
-      padding-left: 10px;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    a {
-      color: #0d47a1;
-    }
+    body{font-family:'Helvetica Neue',sans-serif;background:#f5f7fa;margin:0;padding:0;color:#333;}
+    .container{max-width:800px;margin:0 auto;padding:1em;}
+    header{display:flex;justify-content:space-between;align-items:center;}
+    #taskForm,#filterSection{margin-top:1em;display:flex;flex-direction:column;gap:0.6em;}
+    #taskForm input,#taskForm textarea,#taskForm select,#filterSection input,#filterSection select{padding:0.6em;font-size:1em;border:1px solid #ccc;border-radius:5px;}
+    button{padding:0.6em 1em;font-size:1em;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer;}
+    button:hover{background:#0056b3;}
+    ul#taskList{list-style:none;padding:0;margin-top:1em;}
+    .task-item{background:#fff;padding:1em;border-radius:8px;margin-bottom:0.6em;border-left:6px solid #007bff;position:relative;}
+    .task-item.done{border-left-color:#28a745;opacity:0.8;}
+    .task-item.processing{border-left-color:#ffc107;}
+    .priority-1{border-left-color:#dc3545;} /* High */
+    .priority-2{border-left-color:#17a2b8;} /* Medium */
+    .priority-3{border-left-color:#6c757d;} /* Low */
+    .hidden{display:none;}
+    footer{margin-top:2em;text-align:right;}
+    .progress-bar{height:6px;background:#e9ecef;border-radius:3px;margin-top:4px;}
+    .progress-bar div{height:100%;background:#007bff;border-radius:3px;}
+    .attachment-preview img{max-width:60px;max-height:60px;margin:2px;border-radius:4px;}
+    .view-toggle{margin-left:0.5em;}
+    #calendar{margin-top:1em;}
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>🗂 老闆交辦事項紀錄</h1>
+      <div>
+        <button id="listViewBtn" class="view-toggle">📜 清單視圖</button>
+        <button id="calendarViewBtn" class="view-toggle">📅 日曆視圖</button>
+        <button id="newTaskBtn">➕ 新增任務</button>
+      </div>
+    </header>
 
-  <h1>📌 工作備忘錄</h1>
-  <p><strong>日期：</strong>2025年6月8日</p>
-  <p><strong>負責人：</strong>（請填寫）</p>
-  <p><strong>版本：</strong>V1.0</p>
+    <!-- Task Form -->
+    <section id="taskForm" class="hidden">
+      <input type="text" id="taskTitle" placeholder="任務標題">
+      <textarea id="taskNote" placeholder="備註..."></textarea>
 
-  <div class="section-title">一、📂 工作主題</div>
-  <p>演唱會包車接送服務 — 表單優化與LINE通知腳本整合</p>
+      <select id="taskStatus">
+        <option value="待處理">待處理</option>
+        <option value="處理中">處理中</option>
+        <option value="已完成">已完成</option>
+      </select>
 
-  <div class="section-title">二、📋 工作目標</div>
-  <ul>
-    <li>完成表單自動金額試算</li>
-    <li>串接 LINE Notify 傳送格式化訊息</li>
-    <li>支援行動裝置顯示與 QRCode 傳送功能</li>
-  </ul>
+      <label>截止 / 提醒時間
+        <input type="datetime-local" id="taskTime">
+      </label>
 
-  <div class="section-title">三、🧩 工作項目與進度追蹤</div>
-  <table>
-    <thead>
-      <tr>
-        <th>編號</th>
-        <th>工作項目</th>
-        <th>負責人</th>
-        <th>預計完成日</th>
-        <th>狀態</th>
-        <th>備註</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>建立前台預約表單介面</td>
-        <td>小明</td>
-        <td>6/10</td>
-        <td>✅ 已完成</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>實作自動試算總金額功能</td>
-        <td>小華</td>
-        <td>6/12</td>
-        <td>⏳ 進行中</td>
-        <td>需與價目表同步</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>整合 LINE Notify 模板文字</td>
-        <td>小美</td>
-        <td>6/13</td>
-        <td>⏳ 進行中</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>測試 RWD 顯示與 QRCode 功能</td>
-        <td>小強</td>
-        <td>6/15</td>
-        <td>⏳ 待開始</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+      <label>優先度
+        <select id="taskPriority">
+          <option value="1">1 - 高</option>
+          <option value="2" selected>2 - 中</option>
+          <option value="3">3 - 低</option>
+        </select>
+      </label>
 
-  <div class="section-title">四、📅 時程總覽</div>
-  <table>
-    <thead>
-      <tr>
-        <th>週次</th>
-        <th>重點進度</th>
-        <th>備註</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>第1週</td>
-        <td>表單功能與前端UI完成</td>
-        <td>必須於6/10前完成</td>
-      </tr>
-      <tr>
-        <td>第2週</td>
-        <td>串接功能整合與測試</td>
-        <td>預計進行5次測試</td>
-      </tr>
-      <tr>
-        <td>第3週</td>
-        <td>啟動服務、上線公告</td>
-        <td>包含LINE測試回報機制</td>
-      </tr>
-    </tbody>
-  </table>
+      <label>進度：<span id="progressVal">0</span>%
+        <input type="range" id="taskProgress" min="0" max="100" value="0">
+      </label>
 
-  <div class="section-title">五、📎 相關檔案連結</div>
-  <ul>
-    <li><a href="#">價目表 Excel</a></li>
-    <li><a href="#">LINE範本草稿 Google Docs</a></li>
-    <li><a href="#">預約表單原型 Figma</a></li>
-  </ul>
+      <label>附件
+        <input type="file" id="taskFiles" multiple accept="image/*,application/pdf">
+      </label>
 
-  <div class="section-title">六、✅ 備註與提醒</div>
-  <ul>
-    <li>上線前請務必進行 3 次實測，包含手機、電腦版</li>
-    <li>若價目表有變動，需同步更新自動試算公式</li>
-    <li>LINE Notify 金鑰請妥善保存，不可外洩</li>
-  </ul>
+      <button id="saveTaskBtn">💾 儲存</button>
+    </section>
 
+    <!-- Filter -->
+    <section id="filterSection">
+      <input type="text" id="searchInput" placeholder="🔍 搜尋任務...">
+      <select id="statusFilter">
+        <option value="全部">全部</option>
+        <option value="待處理">待處理</option>
+        <option value="處理中">處理中</option>
+        <option value="已完成">已完成</option>
+      </select>
+      <select id="priorityFilter">
+        <option value="全部">全部優先度</option>
+        <option value="1">高</option>
+        <option value="2">中</option>
+        <option value="3">低</option>
+      </select>
+    </section>
+
+    <!-- List -->
+    <ul id="taskList"></ul>
+
+    <!-- Calendar -->
+    <div id="calendar" class="hidden"></div>
+
+    <footer>
+      <button id="exportBtn">📤 匯出 CSV</button>
+    </footer>
+  </div>
+
+  <!-- FullCalendar & idb-keyval -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/idb-keyval.iife.min.js"></script>
+
+  <script>
+    // ---------- Data ----------
+    let tasks = JSON.parse(localStorage.getItem('taskList')) || [];
+
+    function persist() {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+    }
+
+    // ---------- Elements ----------
+    const taskListEl = document.getElementById('taskList');
+    const taskFormEl = document.getElementById('taskForm');
+    const newTaskBtn = document.getElementById('newTaskBtn');
+    const saveTaskBtn = document.getElementById('saveTaskBtn');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const calendarEl = document.getElementById('calendar');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const calendarViewBtn = document.getElementById('calendarViewBtn');
+    const progressRange = document.getElementById('taskProgress');
+    const progressVal = document.getElementById('progressVal');
+
+    progressRange.addEventListener('input', () => progressVal.textContent = progressRange.value);
+
+    // ---------- Render List ----------
+    function renderTasks() {
+      const keyword = searchInput.value.toLowerCase();
+      const statusF = statusFilter.value;
+      const priorityF = priorityFilter.value;
+      taskListEl.innerHTML = '';
+      tasks
+        .filter(t => 
+          (statusF === '全部' || t.status === statusF) &&
+          (priorityF === '全部' || String(t.priority) === priorityF) &&
+          (t.title.toLowerCase().includes(keyword) || t.note.toLowerCase().includes(keyword))
+        )
+        .forEach((task, index) => {
+          const li = document.createElement('li');
+          li.className = \`task-item \${task.status === '已完成' ? 'done' : task.status === '處理中' ? 'processing' : ''} priority-\${task.priority}\`;
+
+          // Checkbox + editable title
+          const titleLabel = document.createElement('label');
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = task.status === '已完成';
+          cb.onchange = () => toggleDone(index, cb.checked);
+          titleLabel.appendChild(cb);
+
+          const titleSpan = document.createElement('span');
+          titleSpan.contentEditable = true;
+          titleSpan.innerText = task.title;
+          titleSpan.onblur = () => { tasks[index].title = titleSpan.innerText.trim(); persist(); refreshCalendar(); };
+          titleLabel.appendChild(titleSpan);
+          li.appendChild(titleLabel);
+
+          // Note editable
+          const noteDiv = document.createElement('div');
+          noteDiv.contentEditable = true;
+          noteDiv.innerText = task.note;
+          noteDiv.style.marginTop='4px';
+          noteDiv.onblur = () => { tasks[index].note = noteDiv.innerText.trim(); persist(); };
+          li.appendChild(noteDiv);
+
+          // Progress bar
+          const progContainer = document.createElement('div');
+          progContainer.className = 'progress-bar';
+          const progInner = document.createElement('div');
+          progInner.style.width = task.progress + '%';
+          progContainer.appendChild(progInner);
+          li.appendChild(progContainer);
+
+          // Time & Priority
+          const meta = document.createElement('div');
+          meta.innerHTML = \`<small>⏰ \${task.time || '未指定'} | 優先度 \${task.priority} | 進度 \${task.progress}%</small>\`;
+          li.appendChild(meta);
+
+          // Attachments preview
+          if(task.attach && task.attach.length){
+            const prev = document.createElement('div');
+            prev.className='attachment-preview';
+            task.attach.forEach(url=>{
+              if(url.startsWith('data:image')){
+                const img = document.createElement('img');
+                img.src=url;
+                prev.appendChild(img);
+              }else{
+                const link=document.createElement('a');
+                link.href=url;
+                link.textContent='檔案';
+                link.target='_blank';
+                prev.appendChild(link);
+              }
+            });
+            li.appendChild(prev);
+          }
+
+          // Delete btn
+          const delBtn = document.createElement('button');
+          delBtn.textContent = '🗑 刪除';
+          delBtn.style.position='absolute';delBtn.style.right='8px';delBtn.style.top='8px';
+          delBtn.onclick = () => deleteTask(index);
+          li.appendChild(delBtn);
+
+          taskListEl.appendChild(li);
+        });
+    }
+
+    function toggleDone(idx, checked){
+      tasks[idx].status = checked ? '已完成' : '待處理';
+      persist();
+      renderTasks();
+      refreshCalendar();
+    }
+
+    function deleteTask(idx){
+      if(confirm('確定要刪除？')){
+        tasks.splice(idx,1);
+        persist();
+        renderTasks();
+        refreshCalendar();
+      }
+    }
+
+    // ---------- Save Task ----------
+    saveTaskBtn.addEventListener('click', async ()=>{
+      const title = document.getElementById('taskTitle').value.trim();
+      if(!title){alert('請輸入標題');return;}
+      const note = document.getElementById('taskNote').value.trim();
+      const status = document.getElementById('taskStatus').value;
+      const time = document.getElementById('taskTime').value;
+      const priority = Number(document.getElementById('taskPriority').value);
+      const progress = Number(document.getElementById('taskProgress').value);
+      const files = document.getElementById('taskFiles').files;
+
+      const attachURLs = [];
+      if(files.length){
+        for(let f of files){
+          const dataUrl = await fileToDataUrl(f);
+          attachURLs.push(dataUrl);
+        }
+      }
+
+      tasks.push({title,note,status,time,priority,progress,attach:attachURLs});
+      persist();
+      clearForm();
+      taskFormEl.classList.add('hidden');
+      renderTasks();
+      refreshCalendar();
+    });
+
+    function fileToDataUrl(file){
+      return new Promise(res=>{
+        const reader=new FileReader();
+        reader.onload=e=>res(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function clearForm(){
+      document.getElementById('taskTitle').value='';
+      document.getElementById('taskNote').value='';
+      document.getElementById('taskStatus').value='待處理';
+      document.getElementById('taskTime').value='';
+      document.getElementById('taskPriority').value='2';
+      document.getElementById('taskProgress').value='0';
+      progressVal.textContent='0';
+      document.getElementById('taskFiles').value='';
+    }
+
+    newTaskBtn.onclick = ()=> taskFormEl.classList.toggle('hidden');
+
+    searchInput.oninput = renderTasks;
+    statusFilter.onchange = renderTasks;
+    priorityFilter.onchange = renderTasks;
+
+    // ---------- CSV ----------
+    document.getElementById('exportBtn').onclick = ()=>{
+      let csv='標題,備註,狀態,時間,優先度,進度\n';
+      tasks.forEach(t=>{
+        csv+=\`\${t.title.replace(/,/g,'，')},\${t.note.replace(/,/g,'，')},\${t.status},\${t.time},\${t.priority},\${t.progress}\n\`;
+      });
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;a.download='工作紀錄.csv';a.click();
+    };
+
+    // ---------- Calendar ----------
+    let calendar;
+    function initCalendar(){
+      calendar = new FullCalendar.Calendar(calendarEl,{
+        initialView:'dayGridMonth',
+        headerToolbar:{left:'prev,next today',center:'title',right:'dayGridMonth,timeGridWeek'},
+        eventClick:(info)=>{
+          alert(info.event.title);
+        }
+      });
+      calendar.render();
+      refreshCalendar();
+    }
+
+    function refreshCalendar(){
+      if(!calendar) return;
+      calendar.removeAllEvents();
+      tasks.forEach(t=>{
+        if(t.time){
+          calendar.addEvent({title:t.title,start:t.time});
+        }
+      });
+    }
+
+    // View toggles
+    listViewBtn.onclick = ()=>{taskListEl.classList.remove('hidden');calendarEl.classList.add('hidden');};
+    calendarViewBtn.onclick = ()=>{taskListEl.classList.add('hidden');calendarEl.classList.remove('hidden');refreshCalendar();};
+
+    // ---------- Init ----------
+    renderTasks();
+    initCalendar();
+  </script>
 </body>
 </html>
