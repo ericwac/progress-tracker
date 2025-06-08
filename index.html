@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>工作進度追蹤系統</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background: #f5f5f5; }
+    h2 { color: #2c3e50; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    th { background: #ecf0f1; }
+    td[contenteditable="true"] { background-color: #fdfdfd; }
+    .progress-bar { height: 20px; background: #ddd; border-radius: 5px; overflow: hidden; }
+    .fill { height: 100%; background: #4caf50; width: 0%; transition: width 0.4s; }
+    .add-task { margin-top: 15px; }
+    button { padding: 8px 16px; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #2980b9; }
+  </style>
+</head>
+<body>
+
+<h2>工作進度追蹤表</h2>
+
+<table id="taskTable">
+  <thead>
+    <tr>
+      <th>任務名稱</th>
+      <th>負責人</th>
+      <th>進度</th>
+      <th>進度條</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td contenteditable="true">首頁設計</td>
+      <td contenteditable="true">小明</td>
+      <td>
+        <select onchange="updateProgress(this)">
+          <option value="0">0%</option>
+          <option value="25">25%</option>
+          <option value="50" selected>50%</option>
+          <option value="75">75%</option>
+          <option value="100">100%</option>
+        </select>
+      </td>
+      <td><div class="progress-bar"><div class="fill" style="width: 50%;"></div></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="add-task">
+  <button onclick="addTask()">新增任務</button>
+</div>
+
+<script>
+  function updateProgress(select) {
+    const fill = select.parentElement.nextElementSibling.querySelector('.fill');
+    fill.style.width = select.value + '%';
+  }
+
+  function addTask() {
+    const table = document.getElementById('taskTable').getElementsByTagName('tbody')[0];
+    const row = table.insertRow();
+    const taskCell = row.insertCell(0);
+    const ownerCell = row.insertCell(1);
+    const progressCell = row.insertCell(2);
+    const barCell = row.insertCell(3);
+
+    taskCell.contentEditable = "true";
+    ownerCell.contentEditable = "true";
+
+    const select = document.createElement("select");
+    [0, 25, 50, 75, 100].forEach(p => {
+      const option = document.createElement("option");
+      option.value = p;
+      option.text = p + "%";
+      select.appendChild(option);
+    });
+    select.onchange = function () { updateProgress(this); };
+    progressCell.appendChild(select);
+
+    const bar = document.createElement("div");
+    bar.className = "progress-bar";
+    const fill = document.createElement("div");
+    fill.className = "fill";
+    bar.appendChild(fill);
+    barCell.appendChild(bar);
+  }
+</script>
+
+</body>
+</html>
