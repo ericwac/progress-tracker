@@ -1,84 +1,156 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>工作紀錄表（最終修正版）</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>工作備忘錄</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
-    h2 { color: #2c3e50; text-align: center; }
-
-    .calendar-wrapper {
-      margin: 20px auto;
-      max-width: 100%;
-      background: #fff;
-      border-radius: 6px;
-      padding: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      overflow-x: auto;
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
     }
-
-    .calendar-toggle, .calendar-btn {
+    h1 {
       text-align: center;
-      margin-top: 10px;
+      color: #1a4f84;
     }
-
-    .calendar-btn {
-      padding: 10px 20px;
-      background: #9b59b6;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 10px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-
-    @media screen and (max-width: 768px) {
-      .calendar-btn {
-        width: 90%;
-        display: block;
-        margin: 10px auto;
-      }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #e3f2fd;
+    }
+    .section-title {
+      font-size: 20px;
+      margin-top: 40px;
+      color: #1a4f84;
+      border-left: 5px solid #1a4f84;
+      padding-left: 10px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    a {
+      color: #0d47a1;
     }
   </style>
 </head>
 <body>
-<h2>工作紀錄表（最終修正版）</h2>
 
-<div class="calendar-toggle">
-  <button class="calendar-btn" onclick="toggleCalendar()">切換總日曆顯示</button>
-</div>
+  <h1>📌 工作備忘錄</h1>
+  <p><strong>日期：</strong>2025年6月8日</p>
+  <p><strong>負責人：</strong>（請填寫）</p>
+  <p><strong>版本：</strong>V1.0</p>
 
-<div id="calendar" class="calendar-wrapper" style="display:none;"></div>
+  <div class="section-title">一、📂 工作主題</div>
+  <p>演唱會包車接送服務 — 表單優化與LINE通知腳本整合</p>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
-<script>
-  let calendarVisible = false;
-  let calendar; // 全域變數避免重複 render
+  <div class="section-title">二、📋 工作目標</div>
+  <ul>
+    <li>完成表單自動金額試算</li>
+    <li>串接 LINE Notify 傳送格式化訊息</li>
+    <li>支援行動裝置顯示與 QRCode 傳送功能</li>
+  </ul>
 
-  function toggleCalendar() {
-    const calendarEl = document.getElementById('calendar');
-    calendarVisible = !calendarVisible;
+  <div class="section-title">三、🧩 工作項目與進度追蹤</div>
+  <table>
+    <thead>
+      <tr>
+        <th>編號</th>
+        <th>工作項目</th>
+        <th>負責人</th>
+        <th>預計完成日</th>
+        <th>狀態</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>建立前台預約表單介面</td>
+        <td>小明</td>
+        <td>6/10</td>
+        <td>✅ 已完成</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>實作自動試算總金額功能</td>
+        <td>小華</td>
+        <td>6/12</td>
+        <td>⏳ 進行中</td>
+        <td>需與價目表同步</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>整合 LINE Notify 模板文字</td>
+        <td>小美</td>
+        <td>6/13</td>
+        <td>⏳ 進行中</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>測試 RWD 顯示與 QRCode 功能</td>
+        <td>小強</td>
+        <td>6/15</td>
+        <td>⏳ 待開始</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
-    if (calendarVisible) {
-      calendarEl.style.display = 'block';
+  <div class="section-title">四、📅 時程總覽</div>
+  <table>
+    <thead>
+      <tr>
+        <th>週次</th>
+        <th>重點進度</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>第1週</td>
+        <td>表單功能與前端UI完成</td>
+        <td>必須於6/10前完成</td>
+      </tr>
+      <tr>
+        <td>第2週</td>
+        <td>串接功能整合與測試</td>
+        <td>預計進行5次測試</td>
+      </tr>
+      <tr>
+        <td>第3週</td>
+        <td>啟動服務、上線公告</td>
+        <td>包含LINE測試回報機制</td>
+      </tr>
+    </tbody>
+  </table>
 
-      if (!calendar) {
-        calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          height: 'auto',
-          events: [
-            { title: '任務 A', start: '2025-06-08' },
-            { title: '任務 B', start: '2025-06-09' }
-          ]
-        });
-        calendar.render();
-      }
-    } else {
-      calendarEl.style.display = 'none';
-    }
-  }
-</script>
+  <div class="section-title">五、📎 相關檔案連結</div>
+  <ul>
+    <li><a href="#">價目表 Excel</a></li>
+    <li><a href="#">LINE範本草稿 Google Docs</a></li>
+    <li><a href="#">預約表單原型 Figma</a></li>
+  </ul>
+
+  <div class="section-title">六、✅ 備註與提醒</div>
+  <ul>
+    <li>上線前請務必進行 3 次實測，包含手機、電腦版</li>
+    <li>若價目表有變動，需同步更新自動試算公式</li>
+    <li>LINE Notify 金鑰請妥善保存，不可外洩</li>
+  </ul>
+
 </body>
 </html>
